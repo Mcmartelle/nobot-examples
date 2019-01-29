@@ -14,3 +14,16 @@ output.on('close', () => {
   console.log(`Total bytes: ${archive.pointer()}`);
   console.log('archiving has now finished');
 });
+
+archive.on('error', (err) => {
+  throw err;
+});
+
+archive.pipe(output);
+
+const textPath = path.join(__dirname, 'copy.txt');
+const logoPath = path.join(__dirname, 'logo.jpg');
+archive.append(fs.createReadStream(textPath), { name: 'content.txt' });
+archive.append(fs.createReadStream(logoPath), { name: 'nobot.jpg'});
+
+archive.finalize();
